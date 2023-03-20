@@ -4,6 +4,12 @@ import Product from "../../../db/models/Product";
 export default async function handler(request, response) {
   await dbConnect();
   const { id } = request.query;
+  if (request.method === "PUT") {
+    const productToUpdate = await Product.findByIdAndUpdate(id, {
+      $set: request.body,
+    });
+    response.status(200).json(productToUpdate);
+  }
 
   if (request.method === "GET") {
     const product = await Product.findById(id).populate("reviews");

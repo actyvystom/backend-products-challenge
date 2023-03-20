@@ -1,57 +1,87 @@
+import { useState } from "react";
 import { StyledForm, StyledHeading, StyledLabel } from "./ProductForm.styled";
 import { StyledButton } from "../Button/Button.styled";
-import useSWR from "swr";
 
-export default function ProductForm() {
-  const products = useSWR("/api/products");
-
+const currencies = ["EUR", "USD", "GBP"];
+export default function ProductForm({
+  onSubmit,
+  isEditMode,
+  value = {
+    name: "",
+    price: "",
+    currency: "",
+    description: "",
+  },
+}) {
+  const [fish, setFish] = useState(value);
   async function handleSubmit(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const productData = Object.fromEntries(formData);
-
-    const response = await fetch("/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productData),
-    });
-
-    if (response.ok) {
-      await response.json();
-      products.mutate();
-      event.target.reset();
-    } else {
-      console.error(response.status);
-    }
+    onSubmit(event);
   }
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <StyledHeading>Add a new Fish</StyledHeading>
+      <StyledHeading>
+        {isEditMode ? `Edit ${fish.name}` : "Add new fish"}
+      </StyledHeading>
       <StyledLabel htmlFor="name">
         Name:
-        <input type="text" id="name" name="name" />
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={fish.name}
+          onChange={(event) => {
+            setFish((fish) => ({ ...fish, name: event.target.value }));
+          }}
+        />
       </StyledLabel>
       <StyledLabel htmlFor="description">
         Description:
-        <input type="text" id="description" name="description" />
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value={fish.description}
+          onChange={(event) => {
+            setFish((fish) => ({ ...fish, description: event.target.value }));
+          }}
+        />
       </StyledLabel>
       <StyledLabel htmlFor="price">
         Price:
-        <input type="number" id="price" name="price" min="0" />
+        <input
+          type="number"
+          id="price"
+          name="price"
+          min="0"
+          value={fish.price}
+          onChange={(event) => {
+            setFish((fish) => ({ ...fish, price: event.target.value }));
+          }}
+        />
       </StyledLabel>
       <StyledLabel htmlFor="currency">
         Currency:
-        <select id="currency" name="currency">
-          <option value="EUR">EUR</option>
-          <option value="USD">USD</option>
-          <option value="GBP">GBP</option>
+        <select
+          id="currency"
+          name="currency"
+          value={fish.currency}
+          onChange={(event) => {
+            console.log(currencies[event.target.selectedIndex]);
+            setFish((fish) => ({
+              ...fish,
+              currency: currencies[event.target.selectedIndex],
+            }));
+          }}
+        >
+          {currencies.map((currency) => {
+            return <option key={currency}>{currency}</option>;
+          })}
         </select>
       </StyledLabel>
-      <StyledButton type="submit">Submit</StyledButton>
+      <StyledButton type="submit">
+        {isEditMode ? "Save Fish" : "Add Fish"}
+      </StyledButton>
     </StyledForm>
   );
 }
