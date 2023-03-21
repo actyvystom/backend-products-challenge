@@ -1,14 +1,13 @@
 import ProductList from "../components/ProductList";
 import styled from "styled-components";
 import ProductForm from "../components/ProductForm";
-import useSWR from "swr";
+import Router from "next/router";
 const Heading = styled.h1`
   text-align: center;
   color: var(--color-nemo);
 `;
 
 export default function HomePage() {
-  const products = useSWR("/api/products");
   async function handleAddProduct(event) {
     event.preventDefault();
 
@@ -22,6 +21,9 @@ export default function HomePage() {
       },
       body: JSON.stringify(productData),
     });
+    if (response.ok) {
+      Router.reload();
+    }
   }
   return (
     <>

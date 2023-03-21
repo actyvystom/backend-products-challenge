@@ -19,7 +19,7 @@ export default function ProductForm({
   }
 
   return (
-    <StyledForm onSubmit={handleSubmit}>
+    <StyledForm onSubmit={(event) => handleSubmit(event)}>
       <StyledHeading>
         {isEditMode ? `Edit ${fish.name}` : "Add new fish"}
       </StyledHeading>

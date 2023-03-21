@@ -10,6 +10,10 @@ export default async function handler(request, response) {
     });
     response.status(200).json(productToUpdate);
   }
+  if (request.method === "DELETE") {
+    const productToDelete = await Product.findByIdAndDelete(id);
+    response.status(200).json({ status: "Product successfully deleted." });
+  }
 
   if (request.method === "GET") {
     const product = await Product.findById(id).populate("reviews");

@@ -5,7 +5,7 @@ import { ProductCard } from "./Product.styled";
 import ProductForm from "../ProductForm";
 import Comments from "../Comments";
 import { useState } from "react";
-export default function Product({ onSubmit }) {
+export default function Product({ onSubmit, onDelete }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const router = useRouter();
   const {
@@ -30,6 +30,15 @@ export default function Product({ onSubmit }) {
       >
         <span role="img" aria-label="A pencil">
           ✏️
+        </span>
+      </StyledButton>
+      <StyledButton
+        onClick={() => {
+          onDelete(id);
+        }}
+      >
+        <span role="img" aria-label="A cross indicating deletion">
+          ❌
         </span>
       </StyledButton>
       <ProductCard>

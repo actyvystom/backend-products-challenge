@@ -37,13 +37,25 @@ export default function ProductDetailsPage() {
     await trigger(fishData);
     push("/");
   }
+  async function handleDeleteProduct() {
+    const response = await fetch(`/api/products/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      await response.json();
+      push("/");
+    } else {
+      console.error(`Error: ${response.status}`);
+    }
+  }
 
   if (isMutating) {
     return <h1>Updating data...</h1>;
   }
   return (
     <>
-      <Product onSubmit={handleEditProduct} />
+      <Product onSubmit={handleEditProduct} onDelete={handleDeleteProduct} />
     </>
   );
 }
